@@ -18,7 +18,7 @@
   <meta name="keywords" content="">
   <meta name="author" content="Phoenixcoded" />
   <!-- Favicon icon -->
-  <link rel="icon" href="<?= base_url()?>assets/images/favicon.ico" type="image/x-icon">
+  <link rel="icon" href="<?= base_url()?>assets/images/logo_rs.png" type="image/x-icon">
 
   <!-- vendor css -->
   <link rel="stylesheet" href="<?= base_url()?>assets/css/style.css">

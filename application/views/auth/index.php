@@ -5,7 +5,7 @@
       <div class="row align-items-center text-center">
         <div class="col-md-12">
           <div class="card-body">
-            <img src="<?= base_url()?>assets/images/logo-login.png" alt="" class="img-fluid mb-4">
+            <img src="<?= base_url()?>assets/images/logo_rs.png" alt="" width="100px" class="img-fluid mb-4">
             <h4 class="mb-3 f-w-400"><?= $judul;?></h4>
             <?= $this->session->flashdata('message');
             ?>
