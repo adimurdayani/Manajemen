@@ -7,11 +7,11 @@
         <div class="row align-items-center">
           <div class="col-md-12">
             <div class="page-header-title">
-              <h5 class="m-b-10"><?= $judul;?></h5>
+              <h5 class="m-b-10"><?= $judul ?></h5>
             </div>
             <ul class="breadcrumb">
-              <li class="breadcrumb-item"><a href="<?= base_url()?>"><i class="feather icon-home"></i></a></li>
-              <li class="breadcrumb-item"><a href="#!"><?= $judul;?></a></li>
+              <li class="breadcrumb-item"><a href="<?= base_url() ?>"><i class="feather icon-home"></i></a></li>
+              <li class="breadcrumb-item"><a href="#!"><?= $judul ?></a></li>
             </ul>
           </div>
         </div>
@@ -25,7 +25,7 @@
         <div class="card">
 
           <div class="card-header">
-            <h5>Tabel <?=$judul;?></h5>
+            <h5>Tabel <?= $judul ?></h5>
             <div class="card-header-right">
               <div class="btn-group card-option">
                 <button type="button" class="btn dropdown-toggle btn-icon" data-toggle="dropdown" aria-haspopup="true"
@@ -49,10 +49,13 @@
             <div class="card-body table-border-style">
               <a href="" class="btn btn-primary mb-2" data-toggle="modal" data-target="#modal-add"><i
                   class="feather icon-plus"></i> Tambah</a>
-              <?= $this->session->flashdata('msg');?>
-              <?= validation_errors( '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <?= $this->session->flashdata('msg') ?>
+              <?= validation_errors(
+                  '<div class="alert alert-danger alert-dismissible fade show" role="alert">
 							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-						','</div>')?>
+						',
+                  '</div>'
+              ) ?>
               <div class="table-responsive">
                 <table class="table table-hover">
                   <thead>
@@ -64,18 +67,25 @@
                   </thead>
                   <tbody>
 
-                    <?php $no = 1; foreach($get_penyakit as $data):?>
+                    <?php
+                    $no = 1;
+                    foreach ($get_penyakit as $data): ?>
                     <tr>
-                      <td class="text-center"><?= $no++;?></td>
-                      <td><?= $data['nama_penyakit']?></td>
+                      <td class="text-center"><?= $no++ ?></td>
+                      <td><?= $data['nama_penyakit'] ?></td>
                       <td class="text-center">
                         <a href="" class="btn btn-warning" data-toggle="modal"
-                          data-target="#modal-edit<?= $data['id']?>"><i class=" feather icon-edit"></i></a>
+                          data-target="#modal-edit<?= $data[
+                              'id'
+                          ] ?>"><i class=" feather icon-edit"></i> Edit</a>
                         <a href="" class="btn btn-danger" data-toggle="modal"
-                          data-target="#modal-hapus<?= $data['id']?>"><i class=" feather icon-trash"></i></a>
+                          data-target="#modal-hapus<?= $data[
+                              'id'
+                          ] ?>"><i class=" feather icon-trash"></i> Hapus</a>
                       </td>
                     </tr>
-                    <?php endforeach;?>
+                    <?php endforeach;
+                    ?>
                   </tbody>
                 </table>
               </div>
@@ -94,7 +104,7 @@
   aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <form action="<?= base_url('backend/modul/penyakit')?>" method="POST">
+      <form action="<?= base_url('backend/modul/penyakit') ?>" method="POST">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLiveLabel">Tambah Data Penyakit</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -107,8 +117,12 @@
               <div class="form-group">
                 <label class="floating-label" for="nama_penyakit">Nama Penyakit</label>
                 <input type="text" class="form-control" id="nama_penyakit" name="nama_penyakit"
-                  value="<?= set_value('nama_penyakit')?>">
-                <?= form_error('nama_penyakit', '<small class="text-danger">', '</small>')?>
+                  value="<?= set_value('nama_penyakit') ?>">
+                <?= form_error(
+                    'nama_penyakit',
+                    '<small class="text-danger">',
+                    '</small>'
+                ) ?>
               </div>
             </div>
           </div>
@@ -123,12 +137,16 @@
   </div>
 </div>
 
-<?php foreach($get_penyakit as $edit):?>
-<div id="modal-edit<?= $edit['id']?>" class="modal fade" tabindex="-1" role="dialog"
+<?php foreach ($get_penyakit as $edit): ?>
+<div id="modal-edit<?= $edit[
+    'id'
+] ?>" class="modal fade" tabindex="-1" role="dialog"
   aria-labelledby="exampleModalLiveLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <form action="<?= base_url('backend/modul/penyakit_edit')?>" method="POST">
+      <form action="<?= base_url(
+          'backend/modul/penyakit_edit'
+      ) ?>" method="POST">
         <div class="modal-header">
           <h5 class="modal-title" id="exampleModalLiveLabel">Edit Data Penyakit</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -136,15 +154,19 @@
         </div>
         <div class="modal-body">
 
-          <input type="hidden" name="id" value="<?= $edit['id']?>">
+          <input type="hidden" name="id" value="<?= $edit['id'] ?>">
 
           <div class="row">
             <div class="col-md-12">
               <div class="form-group">
                 <label class="floating-label" for="nama_penyakit">Nama Penyakit</label>
                 <input type="text" class="form-control" id="nama_penyakit" name="nama_penyakit"
-                  value="<?= $edit['nama_penyakit']?>">
-                <?= form_error('nama_penyakit', '<small class="text-danger">', '</small>')?>
+                  value="<?= $edit['nama_penyakit'] ?>">
+                <?= form_error(
+                    'nama_penyakit',
+                    '<small class="text-danger">',
+                    '</small>'
+                ) ?>
               </div>
             </div>
           </div>
@@ -158,10 +180,12 @@
     </div>
   </div>
 </div>
-<?php endforeach;?>
+<?php endforeach; ?>
 
-<?php foreach($get_penyakit as $hapus):?>
-<div id="modal-hapus<?= $hapus['id']?>" class="modal fade" tabindex="-1" role="dialog"
+<?php foreach ($get_penyakit as $hapus): ?>
+<div id="modal-hapus<?= $hapus[
+    'id'
+] ?>" class="modal fade" tabindex="-1" role="dialog"
   aria-labelledby="exampleModalLiveLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -172,18 +196,21 @@
       </div>
       <div class="modal-body">
 
-        <input type="hidden" name="id" value="<?= $hapus['id']?>">
+        <input type="hidden" name="id" value="<?= $hapus['id'] ?>">
 
         <p>
-          Apakah anda yakin ingin menghapus data <b><?= $hapus['nama_penyakit']?></b>?
+          Apakah anda yakin ingin menghapus data <b><?= $hapus[
+              'nama_penyakit'
+          ] ?></b>?
         </p>
 
       </div>
       <div class="modal-footer">
         <button type="button" class="btn  btn-secondary" data-dismiss="modal">Tutup</button>
-        <a href="<?= base_url('backend/modul/penyakit_hapus/') . $hapus['id']?>" class="btn  btn-danger">Hapus</a>
+        <a href="<?= base_url('backend/modul/penyakit_hapus/') .
+            $hapus['id'] ?>" class="btn  btn-danger">Hapus</a>
       </div>
     </div>
   </div>
 </div>
-<?php endforeach;?>
+<?php endforeach; ?>

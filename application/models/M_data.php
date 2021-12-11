@@ -1,7 +1,8 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class M_data extends CI_Model {
+class M_data extends CI_Model
+{
 
   public function get_all_simpanan()
   {
@@ -110,21 +111,21 @@ class M_data extends CI_Model {
     $hasil = $query->row();
     return $hasil->member_id;
   }
-  
+
   public function cari_data($keyword = null)
   {
     $this->db->select('*');
     $this->db->from('tb_member');
 
-    if(!empty($keyword)){
+    if (!empty($keyword)) {
       $this->db->like('member_id', $keyword);
-    }else{
+    } else {
       redirect("backend/modul/");
     }
 
     $data = $this->db->get()->row();
     $data->id_m;
-    
+
     $querysimpanan = "SELECT `tb_simpan`.*, `tb_member`.`member_id`
                       FROM `tb_simpan`
                       JOIN  `tb_member` ON `tb_simpan`.`m_id` = `tb_member`.`id_m`
@@ -138,15 +139,15 @@ class M_data extends CI_Model {
     $this->db->select('*');
     $this->db->from('tb_member');
 
-    if(!empty($keyword)){
+    if (!empty($keyword)) {
       $this->db->like('member_id', $keyword);
-    }else{
+    } else {
       redirect("backend/modul/pinjam");
     }
 
     $data = $this->db->get()->row();
     $data->id_m;
-    
+
     $querysimpanan = "SELECT `tb_pinjaman`.*, `tb_member`.`member_id`
                       FROM `tb_pinjaman`
                       JOIN  `tb_member` ON `tb_pinjaman`.`user_id` = `tb_member`.`id_m`
@@ -160,7 +161,7 @@ class M_data extends CI_Model {
     $this->db->select('*');
     $this->db->from('tb_pinjaman');
 
-    if(!empty($keyword)){
+    if (!empty($keyword)) {
       $this->db->like('no_pinjaman', $keyword);
     }
 
@@ -172,7 +173,6 @@ class M_data extends CI_Model {
                   ";
     return $this->db->query($querysimpanan)->row_array();
   }
-
 }
 
 /* End of file M_data.php */
