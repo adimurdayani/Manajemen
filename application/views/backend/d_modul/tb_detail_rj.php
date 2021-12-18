@@ -28,7 +28,10 @@
                 <div class="card">
                     <div class="card-header">
                         <h5>Detail Data <?= $judul ?></h5>
-                        <div class="badge badge-info">Tanggal Berobat: <?= $get_id_rj['tgl_berobat'] ?></div>
+                        Tanggal Berobat: <div class="badge badge-info"><?= $get_id_rj['tgl_berobat'] ?></div>
+                        Nama Penyakit: <div class="badge badge-info"><?= $get_id_rj['nama_penyakit'] ?></div>
+                        Nama Ruangan: <div class="badge badge-info"><?= $get_id_rj['nama_ruangan'] ?></div>
+                        <a href="" class="btn btn-outline-warning float-right" data-target="#modal-tgl" data-toggle="modal"><i class="feather icon-calendar"></i> Atur Jadwal Berobat</a>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -75,3 +78,36 @@
             </div>
         </div>
         <!-- [ Main Content ] end -->
+
+        <div id="modal-tgl" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLiveLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form action="" method="POST">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLiveLabel">Atur Jadwal Berobat</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        </div>
+                        <div class="modal-body">
+
+                            <input type="hidden" name="id" value="<?= $get_id_rj['id'] ?>">
+                            <input type="hidden" name="user_id" value="<?= $get_id_rj['user_id'] ?>">
+
+                            <div class="form-group">
+                                <label for="tgl_berobat">Tanggal Berobat</label>
+                                <input type="date" class="form-control" id="tgl_berobat" name="tgl_berobat">
+                                <?= form_error(
+                                    'tgl_berobat',
+                                    '<small class="text-danger">',
+                                    '</small>'
+                                ) ?>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn  btn-secondary" data-dismiss="modal">Tutup</button>
+                            <button type="submit" class="btn  btn-warning">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>

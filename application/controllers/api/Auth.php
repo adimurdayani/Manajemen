@@ -1,17 +1,18 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
+
 use \Firebase\JWT\JWT;
 
-class Auth extends BD_Controller {
-  
+class Auth extends BD_Controller
+{
+
   public function __construct()
   {
     parent::__construct();
     $this->load->model('m_user');
     $this->load->model('m_data');
-    
   }
-  
+
   public function login_post()
   {
     $username = $this->post('username'); //data input username
@@ -23,35 +24,34 @@ class Auth extends BD_Controller {
     $val = $this->db->get_where('tb_member', $user_arr)->row();
 
     if ($this->db->get_where('tb_member', $user_arr)->num_rows() == 0) {
-      
+
       $this->response([
         'status' => false,
         'message' => 'Username tidak di temukan'
       ], REST_Controller::HTTP_NOT_FOUND);
-
     }
 
     $match = $val->password; //mengambil data password dari database
 
     if ($password == $match) { //kondisi jika password yang di input sama dengan password yang ada di database
-      
+
       $token['id_m'] = $val->id_m; //di lihat dari id users
       $token['username'] = $username;
 
       $date = new DateTime();
       $token['iat'] = $date->getTimestamp();
-      $token['exp'] = $date->getTimestamp() + 60*60*5; //fungsi untuk generate token
+      $token['exp'] = $date->getTimestamp() + 60 * 60 * 5; //fungsi untuk generate token
 
       $output = JWT::encode($token, $kunci); //hasil dari generate token akan di tampilan di respon 200
 
-      if($val->status == 1){
+      if ($val->status == 1) {
         $this->response([
           'status' => true,
           'token' => $output,
           'message' => 'Login sukses',
           'data' => $val
         ], REST_Controller::HTTP_OK); //response jika data berhasil digunakan untuk login
-      }else{
+      } else {
 
         $this->response([
           'status' => false,
@@ -59,10 +59,8 @@ class Auth extends BD_Controller {
         ]); //response jika data tidak ditemukan
 
       }
-      
-      
-    }else {
-      
+    } else {
+
       $this->response([
         'status' => false,
         'message' => 'Password salah'
@@ -90,32 +88,30 @@ class Auth extends BD_Controller {
           'status' => false,
           'message' => 'Ada data yang sudah digunakan'
         ], REST_Controller::HTTP_BAD_REQUEST);
-
-      }    
-
+      }
     } else {
       # inisial data yang akan di input kedalam database
       $data = [
-        'member_id' => "M-".sprintf("%04s", $idmember),
+        'member_id' => "M-" . sprintf("%04s", $idmember),
         'nama' => htmlspecialchars($this->input->post('nama', true)),
         'email' => htmlspecialchars($this->input->post('email', true)),
-        'created_at' => date("d M Y H:i"),        
+        'created_at' => date("d M Y H:i"),
         'status' => 1,
         'username' => htmlspecialchars($this->input->post('username', true)),
         'password' => sha1($this->input->post('password')),
-        'no_hp' => $this->input->post('no_hp')
+        'no_hp' => $this->input->post('no_hp'),
+        'fcm' => $this->input->post('fcm')
       ];
 
       $output = $this->db->insert('tb_member', $data);
 
       if ($output == 0) {
-      // response ketika data gagal di simpan
+        // response ketika data gagal di simpan
         $this->response([
           'status' => false,
           'message' => 'Data gagal di simpan'
         ], REST_Controller::HTTP_NOT_FOUND);
-
-      }else {
+      } else {
         // response ketika data berhasil disimpan
         $this->response([
           'status' => true,
@@ -126,16 +122,16 @@ class Auth extends BD_Controller {
     }
   }
 
-  public function logout_get(){
+  public function logout_get()
+  {
 
     $this->session->sess_destroy();
-      
+
     $this->response([
       "status" => true,
-      "message"=> "logout sukses"
+      "message" => "logout sukses"
     ], REST_Controller::HTTP_OK);
   }
-
 }
 
 /* End of file Auth.php */

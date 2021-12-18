@@ -1,9 +1,11 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
+
 use \Firebase\JWT\JWT;
 
-class Rawat_inap extends BD_Controller {
-  
+class Rawat_inap extends BD_Controller
+{
+
   public function __construct()
   {
     parent::__construct();
@@ -15,9 +17,9 @@ class Rawat_inap extends BD_Controller {
     $id = $this->get('id');
 
     if ($id === null) {
-      $data = $this->db->get('tb_pasien_rawat_inap')->result_array();
-    }else{
-      $data = $this->db->get_where('tb_pasien_rawat_inap', ['id' => $id])->row_array();
+      $data = $this->m_data->get_all_ri();
+    } else {
+      $data = $this->m_data->get_id_ri($id);
     }
 
     if ($data) {
@@ -27,8 +29,7 @@ class Rawat_inap extends BD_Controller {
         'data'    => $data,
         'message' => 'sukses'
       ], REST_Controller::HTTP_OK);
-
-    }else {
+    } else {
       # response laporan jika laporan tidak ada
       $this->response([
         'status'  => false,
@@ -55,12 +56,11 @@ class Rawat_inap extends BD_Controller {
       $this->response([
         'status' => false,
         'message' => validation_errors()
-      ], REST_Controller::HTTP_BAD_REQUEST);   
-
+      ], REST_Controller::HTTP_BAD_REQUEST);
     } else {
       # inisial data yang akan di input kedalam database
       $data = [
-        'no_rekam_inap' => "N-".sprintf("%05s", $norekammedis)."RJ",
+        'no_rekam_inap' => "N-" . sprintf("%05s", $norekammedis) . "RJ",
         'nama_pasien' => $this->input->post('nama_pasien'),
         'kelamin' => $this->input->post('kelamin'),
         'alamat' => $this->input->post('alamat'),
@@ -71,18 +71,18 @@ class Rawat_inap extends BD_Controller {
         'p_jawab' => $this->input->post('p_jawab'),
         'pekerjaan_p_jawab' => $this->input->post('pekerjaan_p_jawab'),
         'keterangan' => $this->input->post('keterangan'),
+        'nama_penyakit' => $this->input->post('nama_penyakit'),
       ];
 
       $output = $this->db->insert('tb_pasien_rawat_inap', $data);
 
       if ($output == 0) {
-      // response ketika data gagal di simpan
+        // response ketika data gagal di simpan
         $this->response([
           'status' => false,
           'message' => 'Data gagal di simpan'
         ], REST_Controller::HTTP_NOT_FOUND);
-
-      }else {
+      } else {
         // response ketika data berhasil disimpan
         $this->response([
           'status' => true,
@@ -92,7 +92,6 @@ class Rawat_inap extends BD_Controller {
       }
     }
   }
-
 }
 
 /* End of file Rawat_jalan.php */

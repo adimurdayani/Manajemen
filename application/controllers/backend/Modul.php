@@ -18,14 +18,13 @@ class Modul extends CI_Controller
         $data = ['no_rekam' => $norekam];
 
         $data['judul'] = 'Data Pasien Rawat Jalan';
-        $data['get_rj'] = $this->db
-            ->get('tb_pasien_rawat_jalan')
-            ->result_array();
+        $data['get_rj'] = $this->m_data->get_all_rj();
         $data['user_ses'] = $this->db
             ->get_where('tb_user', [
                 'username' => $this->session->userdata('username'),
             ])
             ->row_array();
+        $data['get_penyakit'] = $this->db->get('tb_penyakit')->result_array();
 
         $this->form_validation->set_rules(
             'nama_pasien',
@@ -76,6 +75,7 @@ class Modul extends CI_Controller
                 'phone_p_jawab' => $this->input->post('phone_p_jawab'),
                 'pekerjaan_p_jawab' => $this->input->post('pekerjaan_p_jawab'),
                 'keterangan' => $this->input->post('keterangan'),
+                'nama_penyakit' => $this->input->post('nama_penyakit'),
             ];
 
             $this->db->insert('tb_pasien_rawat_jalan', $data);
@@ -153,6 +153,7 @@ class Modul extends CI_Controller
                 'phone_p_jawab' => $this->input->post('phone_p_jawab'),
                 'pekerjaan_p_jawab' => $this->input->post('pekerjaan_p_jawab'),
                 'keterangan' => $this->input->post('keterangan'),
+                'nama_penyakit' => $this->input->post('nama_penyakit'),
             ];
 
             $this->db->where('id', $id);
@@ -171,20 +172,41 @@ class Modul extends CI_Controller
     public function detailrj($id)
     {
         $data['judul'] = 'Detail Data Pasien Rawat Jalan';
-        $data['get_id_rj'] = $this->db
-            ->get_where('tb_pasien_rawat_jalan', ['id' => $id])
-            ->row_array();
+        $data['get_id_rj'] = $this->m_data->get_id_rj($id);
         $data['user_ses'] = $this->db
             ->get_where('tb_user', [
                 'username' => $this->session->userdata('username'),
             ])
             ->row_array();
-        $this->load->view('backend/layout/head', $data, false);
-        $this->load->view('backend/layout/sidebar', $data, false);
-        $this->load->view('backend/layout/header', $data, false);
-        $this->load->view('backend/d_modul/tb_detail_rj', $data, false);
-        $this->load->view('backend/layout/footer', $data, false);
+        $user_id = $this->input->post('user_id');
+        $this->form_validation->set_rules('tgl_berobat', 'tanggal berobat', 'trim|required');
+
+        if ($this->form_validation->run() == FALSE) {
+            $this->load->view('backend/layout/head', $data, false);
+            $this->load->view('backend/layout/sidebar', $data, false);
+            $this->load->view('backend/layout/header', $data, false);
+            $this->load->view('backend/d_modul/tb_detail_rj', $data, false);
+            $this->load->view('backend/layout/footer', $data, false);
+        } else {
+            $id = $this->input->post('id');
+
+            $data = [
+                'tgl_berobat' => $this->input->post('tgl_berobat')
+            ];
+            $this->db->where('id', $id);
+            $this->db->update('tb_pasien_rawat_jalan', $data);
+            $this->session->set_flashdata(
+                'msg',
+                '<div class="alert alert-success alert-dismissible fade show" role="alert">
+							<strong>Sukses!</strong> data anda telah terupdate.
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						</div>'
+            );
+            $this->sendMessage($user_id);
+            redirect('backend/modul');
+        }
     }
+
     public function hapus($id)
     {
         $this->db->delete('tb_pasien_rawat_jalan', ['id' => $id]);
@@ -206,9 +228,7 @@ class Modul extends CI_Controller
         $data = ['no_rekammedis' => $norekammedis];
 
         $data['judul'] = 'Data Pasien Rawat Inap';
-        $data['get_ri'] = $this->db
-            ->get('tb_pasien_rawat_inap')
-            ->result_array();
+        $data['get_ri'] = $this->m_data->get_all_ri();
         $data['user_ses'] = $this->db
             ->get_where('tb_user', [
                 'username' => $this->session->userdata('username'),
@@ -408,7 +428,6 @@ class Modul extends CI_Controller
             # code...
             $data = [
                 'nama_ruangan' => $this->input->post('nama_ruangan'),
-                'alamat' => $this->input->post('alamat'),
             ];
             $this->db->insert('tb_ruangan', $data);
             $this->session->set_flashdata(
@@ -450,8 +469,7 @@ class Modul extends CI_Controller
             $id = $this->input->post('id');
 
             $data = [
-                'nama_ruangan' => $this->input->post('nama_ruangan'),
-                'alamat' => $this->input->post('alamat'),
+                'nama_ruangan' => $this->input->post('nama_ruangan')
             ];
 
             $this->db->where('id', $id);
@@ -602,7 +620,8 @@ class Modul extends CI_Controller
     public function penyakit()
     {
         $data['judul'] = 'Data Penyakit';
-        $data['get_penyakit'] = $this->db->get('tb_penyakit')->result_array();
+        $data['get_penyakit'] = $this->m_data->get_all_penyakit();
+        $data['get_ruangan'] = $this->db->get('tb_ruangan')->result_array();
         $data['user_ses'] = $this->db
             ->get_where('tb_user', [
                 'username' => $this->session->userdata('username'),
@@ -626,6 +645,7 @@ class Modul extends CI_Controller
             # code...
             $data = [
                 'nama_penyakit' => $this->input->post('nama_penyakit'),
+                'ruangan' => $this->input->post('ruangan'),
             ];
             $this->db->insert('tb_penyakit', $data);
             $this->session->set_flashdata(
@@ -668,6 +688,7 @@ class Modul extends CI_Controller
 
             $data = [
                 'nama_penyakit' => $this->input->post('nama_penyakit'),
+                'ruangan' => $this->input->post('ruangan'),
             ];
             $this->db->where('id', $id);
 
@@ -706,9 +727,54 @@ class Modul extends CI_Controller
         $result['member'] = $total_member;
         $result['nama'] = $get_member->nama;
         $result['tanggal'] = $get_member->created_at;
-        $result['msg'] = 'Akun baru telah terdaftar, segera verifikasi akun!';
+        $result['msg'] = 'Akun baru telah terdaftar!';
 
         echo json_encode($result);
+    }
+
+    public function sendMessage($id_register)
+    {
+        $gettoken = $this->db->get_where('tb_member', ['member_id' => $id_register])->row();
+        $get_tanggal = $this->db->get_where('tb_pasien_rawat_jalan', ['user_id' => $id_register])->row();
+
+        $getAll = '["' . $gettoken->fcm . '"]';
+
+        $curl = curl_init();
+        $authKey = "key=AAAAO4TESEo:APA91bHAdgGLoj-8tBMuFm4T3Pp9sMq9PyJhe3z3UZ2tNAhxc-knlr-t9OthOQLsCVMaDNdFLOFX-CIa_wPpJ8bbD-_r-ZrKkJw1T-88goPY-57e8ieqEUZ1HUMMGsZyJSgVULrApmLk";
+        $registration_ids =  $getAll;
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://fcm.googleapis.com/fcm/send",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => '{
+                    "registration_ids": ' . $registration_ids . ',
+                    "notification": {
+                        "title": "Register sukses",
+                        "body": "Tanggal berobat anda selanjutnya. ' . $get_tanggal->tgl_berobat . '"
+                    }
+                  }',
+            CURLOPT_HTTPHEADER => array(
+                "Authorization: " . $authKey,
+                "Content-Type: application/json",
+                "cache-control: no-cache"
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        redirect('backend/modul');
+
+        curl_close($curl);
+
+        if ($err) {
+            echo "cURL Error #:" . $err;
+        } else {
+            // response ketika data berhasil disimpan
+        }
     }
 }
 
