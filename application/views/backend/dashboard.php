@@ -7,11 +7,11 @@
           <div class="row align-items-center">
             <div class="col-md-12">
               <div class="page-header-title">
-                <h5 class="m-b-10"><?= $judul;?></h5>
+                <h5 class="m-b-10"><?= $judul; ?></h5>
               </div>
               <ul class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html"><i class="feather icon-home"></i></a></li>
-                <li class="breadcrumb-item"><a href="#!"><?= $judul;?></a></li>
+                <li class="breadcrumb-item"><a href="#!"><?= $judul; ?></a></li>
               </ul>
             </div>
           </div>
@@ -33,7 +33,7 @@
                 <div class="card-footer bg-primary text-white">
                   <div class="row text-center">
                     <div class="col">
-                      <h4 class="m-0 text-white"><?= $jml_menu?></h4>
+                      <h4 class="m-0 text-white"><?= $jml_menu ?></h4>
                       <span>Menu</span>
                     </div>
                   </div>
@@ -50,7 +50,7 @@
                 <div class="card-footer bg-success text-white">
                   <div class="row text-center">
                     <div class="col">
-                      <h4 class="m-0 text-white"><?= $jml_sub_menu?></h4>
+                      <h4 class="m-0 text-white"><?= $jml_sub_menu ?></h4>
                       <span>Sub Menu</span>
                     </div>
                   </div>
@@ -118,7 +118,7 @@
                 <div class="card-body">
                   <div class="row align-items-center">
                     <div class="col-8">
-                      <h4 class="text-c-red"><?= $jml_user?></h4>
+                      <h4 class="text-c-red"><?= $jml_user ?></h4>
                       <h6 class="text-muted m-b-0">User Management</h6>
                     </div>
                     <div class="col-4 text-right">
@@ -143,7 +143,7 @@
                 <div class="card-body">
                   <div class="row align-items-center">
                     <div class="col-8">
-                      <h4 class="text-c-blue"><?= $jml_grup?></h4>
+                      <h4 class="text-c-blue"><?= $jml_grup ?></h4>
                       <h6 class="text-muted m-b-0">Grup User</h6>
                     </div>
                     <div class="col-4 text-right">

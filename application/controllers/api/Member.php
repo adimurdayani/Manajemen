@@ -1,13 +1,15 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
+
 use \Firebase\JWT\JWT;
-class Member extends BD_Controller {
+
+class Member extends BD_Controller
+{
 
   public function __construct()
   {
     parent::__construct();
     $this->load->model('m_data');
-    
   }
 
   public function index_get()
@@ -16,7 +18,7 @@ class Member extends BD_Controller {
 
     if ($id === null) {
       $data = $this->db->get('tb_member')->result_array();
-    }else{
+    } else {
       $data = $this->db->get_where('tb_member', ['id' => $id])->row_array();
     }
 
@@ -27,8 +29,7 @@ class Member extends BD_Controller {
         'data'    => $data,
         'message' => 'sukses'
       ], REST_Controller::HTTP_OK);
-
-    }else {
+    } else {
       # response laporan jika laporan tidak ada
       $this->response([
         'status'  => false,
@@ -50,11 +51,10 @@ class Member extends BD_Controller {
         'status' => false,
         'message' => validation_errors()
       ], REST_Controller::HTTP_BAD_REQUEST);
-
     } else {
       # inisial data yang akan di input kedalam database
       $id = $this->input->post('member_id');
-      
+
       $data = [
         'nik' => $this->input->post('nik'),
         'tgl_lahir' => $this->input->post('tgl_lahir'),
@@ -70,13 +70,12 @@ class Member extends BD_Controller {
       $output = $this->db->update('tb_member', $data);
 
       if ($output == 0) {
-      // response ketika data gagal di simpan
+        // response ketika data gagal di simpan
         $this->response([
           'status' => false,
           'message' => 'Data gagal di simpan'
         ], REST_Controller::HTTP_NOT_FOUND);
-
-      }else {
+      } else {
         // response ketika data berhasil disimpan
         $this->response([
           'status' => true,
@@ -103,31 +102,28 @@ class Member extends BD_Controller {
           'status' => false,
           'message' => 'data yang diinput salah'
         ], REST_Controller::HTTP_BAD_REQUEST);
-
-      }    
-
+      }
     } else {
       # inisial data yang akan di input kedalam database
       $id = $this->input->post('id_m');
-      
+
       $data = [
         'nama' => $this->input->post('nama'),
         'email' => $this->input->post('email'),
         'username' => $this->input->post('username'),
         'created_at' => date("d M Y")
       ];
-      
+
       $this->db->where('id_m', $id);
       $output = $this->db->update('tb_member', $data);
 
       if ($output == 0) {
-      // response ketika data gagal di simpan
+        // response ketika data gagal di simpan
         $this->response([
           'status' => false,
           'message' => 'Data gagal di simpan'
         ], REST_Controller::HTTP_NOT_FOUND);
-
-      }else {
+      } else {
         // response ketika data berhasil disimpan
         $this->response([
           'status' => true,
@@ -151,28 +147,25 @@ class Member extends BD_Controller {
           'status' => false,
           'message' => 'data yang diinput salah'
         ], REST_Controller::HTTP_BAD_REQUEST);
-
-      }    
-
+      }
     } else {
       # inisial data yang akan di input kedalam database
       $id = $this->input->post('id_m');
-      
+
       $data = [
         'password' => sha1($this->input->post('password')),
-        'created_at' => date("d M Y H:i")        
+        'created_at' => date("d M Y H:i")
       ];
       $this->db->where('id_m', $id);
       $output = $this->db->update('tb_member', $data);
 
       if ($output == 0) {
-      // response ketika data gagal di simpan
+        // response ketika data gagal di simpan
         $this->response([
           'status' => false,
           'message' => 'Data gagal di simpan'
         ], REST_Controller::HTTP_NOT_FOUND);
-
-      }else {
+      } else {
         // response ketika data berhasil disimpan
         $this->response([
           'status' => true,
@@ -183,6 +176,77 @@ class Member extends BD_Controller {
     }
   }
 
+  public function gambar_get()
+  {
+    $id = $this->get('id_m');
+    if ($id === null) {
+      $data = $this->db->get('tb_member')->result_array();
+    } else {
+      $data = $this->db->get_where('tb_member',  ['id_m' => $id])->row_array();
+    }
+    if ($data) {
+      # response laporan jika data laporan ada, dan menampilkan semua data laporan
+      $this->response([
+        'status'  => true,
+        'data'    => $data,
+        'message' => 'sukses'
+      ], REST_Controller::HTTP_OK);
+    } else {
+      # response laporan jika laporan tidak ada
+      $this->response([
+        'status'  => false,
+        'message' => 'data tidak di temukan'
+      ], REST_Controller::HTTP_NOT_FOUND);
+    }
+  }
+
+  public function gambar_post()
+  {
+    $id = $this->input->post('id_m');
+
+    $config['upload_path']    = './assets/images/uploads/';
+    $config['allowed_types']  = 'jpg|png|jpeg';
+    $config['max_size']       = '1024';
+    $config['encrypt_name']    = TRUE;
+
+    $this->load->library('upload', $config);
+
+    if (!empty($_FILES['image'])) {
+      # code...
+      $this->upload->do_upload('image');
+      $image = $this->upload->data();
+      $file_image = $image['file_name'];
+    } else {
+      // response ketika gambar bermasalah
+      $this->response([
+        'status'  => false,
+        'message' => 'file tidak terupload'
+      ], REST_Controller::HTTP_BAD_REQUEST);
+    }
+
+    $data = [
+      'created_at' => date("d M Y"),
+      'image' => $file_image
+    ];
+
+    $this->db->where('id_m', $id);
+    $output = $this->db->update('tb_member', $data);
+
+    if ($output == 0) {
+      // response ketika data gagal di simpan
+      $this->response([
+        'status' => false,
+        'message' => 'Gambar gagal disimpan'
+      ], REST_Controller::HTTP_NOT_FOUND);
+    } else {
+      // response ketika data berhasil disimpan
+      $this->response([
+        'status' => true,
+        'message' => 'Gambar berhasil disimpan',
+        'data' => $data
+      ], REST_Controller::HTTP_OK);
+    }
+  }
 }
 
 /* End of file User.php */

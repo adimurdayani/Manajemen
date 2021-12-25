@@ -1,5 +1,5 @@
   <!-- [ Header ] start -->
-  <header class="navbar pcoded-header navbar-expand-lg navbar-light header-blue">
+  <header class="navbar pcoded-header navbar-expand-lg navbar-light">
     <div class="m-header">
       <a class="mobile-menu" id="mobile-collapse" href="#!"><span></span></a>
       <a href="#!" class="b-brand">
@@ -8,7 +8,7 @@
         <img src="<?= base_url() ?>assets/images/logo-icon.png" alt="" class="logo-thumb">
       </a>
       <a href="#!" class="mob-toggler">
-        <i class="feather icon-more-vertical"></i>
+        <i class="feather icon-more-vertical text-light"></i>
       </a>
     </div>
     <div class="collapse navbar-collapse">
@@ -18,8 +18,8 @@
         <li>
           <div class="dropdown">
             <a class="dropdown-toggle" href="#" data-toggle="dropdown">
-              <i class="icon feather icon-bell"></i>
-              <span class="badge rounded-pill bg-danger" id="total">0</span>
+              <i class="icon feather icon-bell text-light"></i>
+              <span class="badge rounded-pill bg-danger text-light" id="total">0</span>
             </a>
             <div class="dropdown-menu dropdown-menu-right notification">
               <div class="noti-head">
@@ -51,7 +51,7 @@
         <li>
           <div class="dropdown drp-user">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <i class="feather icon-user"></i>
+              <i class="feather icon-user text-light"></i>
             </a>
             <div class="dropdown-menu dropdown-menu-right profile-notification">
               <div class="pro-head">

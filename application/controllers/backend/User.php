@@ -1,7 +1,8 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class User extends CI_Controller {
+class User extends CI_Controller
+{
 
   public function __construct()
   {
@@ -21,13 +22,35 @@ class User extends CI_Controller {
     $this->load->view('backend/layout/footer', $data, FALSE);
   }
 
+
+  public function edit_profile()
+  {
+    $id = $this->input->post('id');
+
+    $data = [
+      'nama'        => $this->input->post('nama'),
+      'email'       => $this->input->post('email'),
+      'username'    => $this->input->post('username'),
+      'created_at'  => date('d M Y')
+    ];
+
+    $this->db->where('id', $id);
+
+    $this->db->update('tb_user', $data);
+    $this->session->set_flashdata('msg', '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+							<strong>Sukses!</strong> profile anda telah terubah.
+							<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						</div>');
+    redirect('backend/user');
+  }
+
   public function member()
   {
     $getidmember = $this->m_data->cekidmember();
     $nourut = substr($getidmember, 3, 4);
     $idmember = $nourut + 1;
     $data = array('member_id' => $idmember);
-    
+
     $data['judul'] = 'Data Member';
     $data['get_member'] = $this->db->get('tb_member')->result_array();
     $data['user_ses'] = $this->db->get_where('tb_user', ['username' => $this->session->userdata('username')])->row_array();
@@ -38,7 +61,7 @@ class User extends CI_Controller {
     $this->form_validation->set_rules('pekerjaan', 'pekerjaan', 'trim|required');
     $this->form_validation->set_rules('email', 'email', 'trim|required|valid_email');
     $this->form_validation->set_rules('no_hp', 'nomor telp', 'trim|required');
-    
+
     if ($this->form_validation->run() == FALSE) {
       # code...
       $this->load->view('backend/layout/head', $data, FALSE);
@@ -48,8 +71,8 @@ class User extends CI_Controller {
       $this->load->view('backend/layout/footer', $data, FALSE);
     } else {
       # code...
-      $data= [
-        
+      $data = [
+
         'member_id' => $this->input->post('member_id'),
         'nik' => $this->input->post('nik'),
         'nama' => $this->input->post('nama'),
@@ -64,9 +87,9 @@ class User extends CI_Controller {
         't_lahir' => $this->input->post('t_lahir'),
         'created_at' => date("d M Y"),
         'status' => 0,
-                
+
       ];
-      
+
       $this->db->insert('tb_member', $data);
       $this->session->set_flashdata('msg', '<div class="alert alert-success alert-dismissible fade show" role="alert">
 							<strong>Sukses!</strong> data anda telah tersimpan.
@@ -74,11 +97,10 @@ class User extends CI_Controller {
 						</div>');
       redirect('backend/user/member');
     }
-    
   }
 
   public function member_detail($id)
-  {    
+  {
     $data['judul'] = 'Detail Member';
     $data['get_member'] = $this->db->get_where('tb_member', ['id_m' => $id])->row_array();
     $data['user_ses'] = $this->db->get_where('tb_user', ['username' => $this->session->userdata('username')])->row_array();
@@ -89,7 +111,7 @@ class User extends CI_Controller {
     $this->form_validation->set_rules('pekerjaan', 'pekerjaan', 'trim|required');
     $this->form_validation->set_rules('email', 'email', 'trim|required|valid_email');
     $this->form_validation->set_rules('no_hp', 'nomor telp', 'trim|required');
-    
+
     if ($this->form_validation->run() == FALSE) {
       # code...
       $this->load->view('backend/layout/head', $data, FALSE);
@@ -100,8 +122,8 @@ class User extends CI_Controller {
     } else {
       # code...   
       $id = $this->input->post('id_m');
-      $data= [
-        
+      $data = [
+
         'nik' => $this->input->post('nik'),
         'nama' => $this->input->post('nama'),
         'tgl_lahir' => $this->input->post('tgl_lahir'),
@@ -114,10 +136,10 @@ class User extends CI_Controller {
         'no_hp' => $this->input->post('no_hp'),
         't_lahir' => $this->input->post('t_lahir'),
         'created_at' => date("d M Y"),
-                
+
       ];
       $this->db->where('id_m', $id);
-      
+
       $this->db->update('tb_member', $data);
       $this->session->set_flashdata('msg', '<div class="alert alert-success alert-dismissible fade show" role="alert">
 							<strong>Sukses!</strong> data anda telah tersimpan.
@@ -125,16 +147,15 @@ class User extends CI_Controller {
 						</div>');
       redirect('backend/user/member');
     }
-    
   }
 
   public function member_edit()
-  {    
+  {
     $data['judul'] = 'Data Member';
     $data['user_ses'] = $this->db->get_where('tb_user', ['username' => $this->session->userdata('username')])->row_array();
 
     $this->form_validation->set_rules('status', 'status', 'trim|required');
-    
+
     if ($this->form_validation->run() == FALSE) {
       # code...
       $this->load->view('backend/layout/head', $data, FALSE);
@@ -145,16 +166,16 @@ class User extends CI_Controller {
     } else {
       # code...
       $id = $this->input->post('id_m');
-      
-      $data= [
-        
+
+      $data = [
+
         'created_at' => date("d M Y"),
         'status' => $this->input->post('status')
-                
+
       ];
-      
+
       $this->db->where('id_m', $id);
-      
+
       $this->db->update('tb_member', $data);
       $this->session->set_flashdata('msg', '<div class="alert alert-warning alert-dismissible fade show" role="alert">
 							<strong>Sukses!</strong> data anda telah diubah.
@@ -162,7 +183,6 @@ class User extends CI_Controller {
 						</div>');
       redirect('backend/user/member');
     }
-    
   }
 
   public function hapus_member($id)
@@ -174,7 +194,6 @@ class User extends CI_Controller {
           </div>');
     redirect('backend/user/member');
   }
-
 }
 
 /* End of file Profil.php */

@@ -59,6 +59,7 @@
                 <table id="table" class="table">
                   <thead>
                     <tr>
+                      <th class="text-center">Foto</th>
                       <th class="text-center">NIK</th>
                       <th class="text-center">Nama</th>
                       <th class="text-center">Tempat, Tanggal Lahir</th>
@@ -75,6 +76,7 @@
                     $no = 1;
                     foreach ($get_member as $data) : ?>
                       <tr>
+                        <td style="width: 100px;"><img src="<?= base_url('assets/images/uploads/') . $data['image'] ?>" alt="<?= $data['image'] ?>" class="img-thumbnail" width="60%"></td>
                         <td><?= $data['nik'] ?></td>
                         <td><?= $data['nama'] ?></td>
                         <td><?= $data['t_lahir'] ?>, <?= $data['tgl_lahir'] ?></td>
